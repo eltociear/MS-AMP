@@ -33,7 +33,7 @@ def _get_deepspeed_config(**deepspeed_args):
     return DeepSpeedConfig(config)
 
 
-def initialize(model, optimizer=None, opt_level='O1', use_deep_speed=False, **deepspeed_args):  # noqa: C901
+def initialize(model, optimizer=None, opt_level='O1', use_deep_speed=False, **deepspeed_args):    # noqa: C901
     """Initialize your model, optimizer according to the optimization level.
 
     msamp.initialize() should be called after you have finished constructing your model and optimizer.
@@ -103,7 +103,7 @@ def initialize(model, optimizer=None, opt_level='O1', use_deep_speed=False, **de
             return deepspeed.initialize(model=model, optimizer=optimizer, **deepspeed_args)
 
         return cast_model, cast_optimizer
-    else:  # O3
+    else:    # O3
         if not use_deep_speed:
             raise ValueError('use_deep_speed must be True when opt_level is O3')
 

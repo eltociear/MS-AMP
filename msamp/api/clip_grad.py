@@ -74,7 +74,8 @@ def clip_grad_norm_(parameters, max_norm, norm_type=2.0, error_if_nonfinite=Fals
             f'The total norm of order {norm_type} for gradients from '
             '`parameters` is non-finite, so it cannot be clipped. To disable '
             'this error and scale the gradients by the non-finite norm anyway, '
-            'set `error_if_nonfinite=False`')
+            'set `error_if_nonfinite=False`'
+        )
 
     grads = [p.grad for p in parameters if p.grad is not None]
     max_norm = float(max_norm)
