@@ -263,7 +263,18 @@ class LinearReplacer:
 
         # DDP ignores the FP8 weights, and the optimizer provides a function `optimizer.all_reduce_grads(model)`
         # to sync them.
-        torch.nn.parallel.DistributedDataParallel._set_params_and_buffers_to_ignore_for_model(model, fp8_names)
+        # _build_params_for_reducer in torch.nn.parallel.distributed uses f"{module_name}.{param_name}" to get
+        # the parameters to ignore.
+        params_to_ignore = []
+        for module_name, module in model.named_modules():
+            for param_name, param in module.named_parameters(recurse=False):
+                if isinstance(param, ScalingParameter):
+                    fqn = f'{module_name}.{param_name}'
+                    params_to_ignore.append(fqn)
+
+        torch.nn.parallel.DistributedDataParallel._set_params_and_buffers_to_ignore_for_model(
+            model, params_to_ignore + fp8_names
+        )
 
         def get_fp8_wgrads():
             return [p.grad for p in fp8_weights]
